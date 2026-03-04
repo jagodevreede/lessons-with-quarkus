@@ -51,8 +51,13 @@ public class GreetingResource {
         return Response.ok(greeting.getId()).build();
     }
 
-    @WithSpan
+    @WithSlowSpan(minimumDurationInMs = 1)
     String rndChar () {
+        try {
+            Thread.sleep(2);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         int rnd = (int) (Math.random() * 52);
         char base = (rnd < 26) ? 'A' : 'a';
         return String.valueOf(base + rnd % 26);
